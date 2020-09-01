@@ -28,6 +28,23 @@ function getDataUser () {
 
   return {user, loading, error}
 }
+function payAction (e) {
+    e.preventDefault
+    Axios({
+        method: 'get',
+        url: 'http://localhost:5000/pay',
+        headers: {
+            id: localStorage.getItem('id')
+        }
+    })
+    .then(result => {
+        console.log(result)
+        getDataUser()
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
 
 export default function profile () {
   const {user, loading, error} = getDataUser()
@@ -60,16 +77,52 @@ export default function profile () {
         </tr>
       </table>
       <h1>
-        Cart
+        Product
       </h1>
-        {user.product.map((item) => {
-        <div key={item._id}>
-          <p> {item.name} </p>
-          <p> {item.price} </p>
-          <p> {item.amount} </p>
-        </div>
-        })}
-        <p> {JSON.stringify(user.product[0].name)} </p>
+            <table style={{border: 1+'px'}}>
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Price </th>
+                        <th> Amount </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {user.product.map((item) =>(
+                        <tr>
+                            <td> {item.name} </td>
+                            <td> {item.price} </td>
+                            <td> {item.amount} </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        <h1>
+         Cart
+        </h1>
+        <table style={{border: 1+'px'}}>
+            <thead>
+                <tr>
+                    <th> Name </th>
+                    <th> Price </th>
+                    <th> Amount </th>
+                    <th> Total Price </th>
+                </tr>
+            </thead>
+            <tbody>
+                {user.cart.map((item) =>(
+                    <tr style={{textAlign: 'center'}}>
+                        <td> {item.name} </td>
+                        <td> Rp.{item.price} </td>
+                        <td> {item.amount_product} </td>
+                        <td> Rp.{parseInt(item.price)*item.amount_product} </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table> <br/>
+        <button type='button' onClick={payAction}>
+            Pay
+        </button>
     </div>
   )
 }
